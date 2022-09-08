@@ -1,0 +1,46 @@
+version: '3.7'
+
+services:
+  selenium:
+    container_name: selenium
+    image: selenium/standalone-chrome
+    ports:
+      - "4444:4444"
+    restart: always
+    volumes:
+      - "/dev/shm:/dev/shm"
+    networks:
+      - kijiji_scraper
+
+  db:
+    image: postgres:13
+    container_name: kijiji_db
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - "./postgres:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
+    networks:
+      - kijiji_scraper
+
+  app:
+    build: ./
+    container_name: app
+    command: python main.py
+    depends_on:
+      - db
+      - selenium
+    env_file:
+      - .env
+    volumes:
+      - "/dev/shm:/dev/shm"
+      - "./:/app"
+    networks:
+      - kijiji_scraper
+    tty: True
+
+networks:
+  kijiji_scraper:
+    external: true
