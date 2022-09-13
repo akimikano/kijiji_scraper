@@ -16,6 +16,8 @@ docker restart app
 ```
 
 If everything is ok you will see according logs in every step 
+You can test script with Sqlite and Postgresql. There are two DATABASE_URL variables
+in settings.py. Now Postgresql is commented.
 
 ## Libraries
 
